@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Polio Information Assistant</title>
+    <style>
+        :root {
+            --primary-color: #2A5C82;
+            --secondary-color: #4CAF50;
+            --accent-color: #FF6B6B;
+            --light-bg: #f8f9fa;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            min-height: 100vh;
+        }
+
+        .header {
+            background: var(--primary-color);
+            color: white;
+            padding: 2rem;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 2.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 2rem;
+            background: white;
+            border-radius: 1rem;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+            transform: translateY(-50px);
+        }
+
+        .input-group {
+            margin: 0 auto 2rem; /* Centers the element */
+            position: relative;
+            width: 70%; /* Reduced from 100% */
+            max-width: 600px; /* Maximum width for larger screens */
+        }
+        
+        /* For mobile screens */
+        @media (max-width: 768px) {
+            .input-group {
+                width: 90%; /* Slightly wider on mobile */
+                max-width: 100%;
+            }
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 1.2rem;
+            font-size: 1.1rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 0.8rem;
+            transition: all 0.3s ease;
+            background: var(--light-bg);
+        }
+
+        input[type="text"]:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(42, 92, 130, 0.1);
+        }
+
+        button {
+            background: var(--primary-color);
+            color: white;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 0.8rem;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin: 0 auto;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(42, 92, 130, 0.2);
+            background: #1F4A6B;
+        }
+
+        .response-container {
+            margin-top: 2rem;
+            padding: 2rem;
+            background: var(--light-bg);
+            border-radius: 0.8rem;
+            border-left: 4px solid var(--primary-color);
+            animation: fadeIn 0.5s ease;
+        }
+
+        .error {
+            color: #dc3545;
+            background: #ffeef0;
+            padding: 1rem;
+            border-radius: 0.8rem;
+            border-left: 4px solid #dc3545;
+            margin: 1rem 0;
+        }
+
+        .partner-logos {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 2rem;
+            padding: 2rem;
+            justify-items: center;
+            margin-top: 2rem;
+        }
+
+        .partner-logos img {
+            height: 50px;
+            opacity: 0.7;
+            transition: opacity 0.3s ease;
+        }
+
+        .partner-logos img:hover {
+            opacity: 1;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .vaccine-icon {
+            width: 40px;
+            height: 40px;
+        }
+
+        footer {
+            text-align: center;
+            padding: 2rem;
+            color: var(--primary-color);
+            background: white;
+            margin-top: auto;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                margin: 1rem;
+                transform: none;
+            }
+            
+            .header h1 {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+    <!-- Optional: Include icon library -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="header">
+        <h1>
+            <i class="fas fa-shield-virus vaccine-icon"></i>
+            Polio Eradication Program
+        </h1>
+    </div>
+
+    <div class="container">
+        <form action="/ask" method="POST">
+            <div class="input-group">
+                <input type="text" id="query" name="query" required 
+                    placeholder="Ask about polio vaccines, symptoms, prevention, or eradication efforts...">
+            </div>
+            <button type="submit">
+                <i class="fas fa-search"></i>
+                Get Answer
+            </button>
+        </form>
+
+        {% if error %}
+        <div class="error">
+            <p>{{ error }}</p>
+        </div>
+        {% endif %}
+
+        {% if response %}
+        <div class="response-container">
+            <h3 style="color: var(--primary-color); margin-top: 0;">
+                <i class="fas fa-comment-medical"></i>
+                Expert Response
+            </h3>
+            <div class="response-content">
+                {{ response | safe }}
+            </div>
+        </div>
+        {% endif %}
+    </div>
+
+    <footer>
+        <p>© 2024 Global Polio Eradication Initiative. Supported by health partners worldwide.</p>
+    </footer>
+</body>
+</html>
