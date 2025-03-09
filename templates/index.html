@@ -1,213 +1,267 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Polio Information Assistant</title>
-    <style>
-        :root {
-            --primary-color: #2A5C82;
-            --secondary-color: #4CAF50;
-            --accent-color: #FF6B6B;
-            --light-bg: #f8f9fa;
-        }
 
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Polio ChatBot</title>
+    <style>
         body {
             font-family: 'Segoe UI', system-ui, sans-serif;
+            background: #f1f1f1;
             margin: 0;
             padding: 0;
-            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-            min-height: 100vh;
-        }
-
-        .header {
-            background: var(--primary-color);
-            color: white;
-            padding: 2rem;
-            text-align: center;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-
-        .header h1 {
-            margin: 0;
-            font-size: 2.5rem;
             display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 1rem;
+            flex-direction: column;
+            height: 100vh;
         }
 
-        .container {
+        .chat-container {
+            flex: 1;
+            padding: 1rem;
+            overflow-y: auto;
+            background: #fff;
+            margin: 1rem auto;
             max-width: 800px;
-            margin: 2rem auto;
-            padding: 2rem;
-            background: white;
-            border-radius: 1rem;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
-            transform: translateY(-50px);
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
         }
 
-        .input-group {
-            margin: 0 auto 2rem; /* Centers the element */
-            position: relative;
-            width: 70%; /* Reduced from 100% */
-            max-width: 600px; /* Maximum width for larger screens */
-        }
-        
-        /* For mobile screens */
-        @media (max-width: 768px) {
-            .input-group {
-                width: 90%; /* Slightly wider on mobile */
-                max-width: 100%;
-            }
-        }
-        input[type="text"] {
-            width: 100%;
-            padding: 1.2rem;
-            font-size: 1.1rem;
-            border: 2px solid #e0e0e0;
-            border-radius: 0.8rem;
-            transition: all 0.3s ease;
-            background: var(--light-bg);
+        .message {
+            margin: 1rem;
+            padding: 0.8rem 1.2rem;
+            border-radius: 16px;
+            max-width: 70%;
+            word-wrap: break-word;
         }
 
-        input[type="text"]:focus {
-            outline: none;
-            border-color: var(--primary-color);
-            box-shadow: 0 0 0 3px rgba(42, 92, 130, 0.1);
+        .user-message {
+            background-color: #dcf8c6;
+            align-self: flex-end;
+            text-align: right;
         }
 
-        button {
-            background: var(--primary-color);
-            color: white;
-            padding: 1rem 2rem;
-            border: none;
-            border-radius: 0.8rem;
-            font-size: 1.1rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
+        .assistant-message {
+            background-color: #eee;
+            align-self: flex-start;
+            text-align: left;
+        }
+
+        .input-container {
             display: flex;
-            align-items: center;
-            gap: 0.5rem;
+            padding: 1rem;
+            background: #fff;
+            border-top: 1px solid #ccc;
+            max-width: 800px;
             margin: 0 auto;
         }
 
-        button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(42, 92, 130, 0.2);
+        .input-container input[type="text"] {
+            flex: 1;
+            padding: 0.8rem;
+            font-size: 1rem;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .input-container button {
+            margin-left: 0.5rem;
+            padding: 0.8rem 1rem;
+            font-size: 1rem;
+            border: none;
+            background: #2A5C82;
+            color: #fff;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .input-container button:hover {
+            background: #1F4A6B;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="chat-container" id="chat">
+        {% if conversation %}
+        {% for msg in conversation %}
+        <div class="message {% if msg.role == 'user' %}user-message{% else %}assistant-message{% endif %}">
+            <p>{{ msg.content|safe }}</p>
+        </div>
+        {% endfor %}
+        {% else %}
+        <p>Welcome! Ask me anything about polio, vaccines, or public health initiatives.</p>
+        {% endif %}
+    </div>
+
+    <form action="/ask" method="POST" class="input-container">
+        <input type="text" name="query" placeholder="Type your message here..." required />
+        <button type="submit">Send</button>
+    </form>
+</body>
+
+</html> -->
+
+
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Polio ChatBot</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background: #f1f1f1;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+
+        /* Navbar */
+        .navbar {
+            background: #2A5C82;
+            color: white;
+            padding: 1rem;
+            text-align: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        /* Chat Container */
+        .chat-container {
+            flex: 1;
+            padding: 1rem;
+            overflow-y: auto;
+            background: #fff;
+            margin: 1rem auto;
+            max-width: 800px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .message {
+            margin: 1rem;
+            padding: 0.8rem 1.2rem;
+            border-radius: 16px;
+            max-width: 70%;
+            word-wrap: break-word;
+        }
+
+        .user-message {
+            background-color: #dcf8c6;
+            align-self: flex-end;
+            text-align: right;
+            color: #333;
+        }
+
+        .assistant-message {
+            background-color: #2A5C82;
+            color: white;
+            align-self: flex-start;
+            text-align: left;
+        }
+
+        /* Input Area */
+        .input-container {
+            display: flex;
+            padding: 1rem;
+            background: #fff;
+            border-top: 1px solid #ccc;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .input-container input[type="text"] {
+            flex: 1;
+            padding: 0.8rem;
+            font-size: 1rem;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .input-container button {
+            margin-left: 0.5rem;
+            padding: 0.8rem 1rem;
+            font-size: 1rem;
+            border: none;
+            background: #2A5C82;
+            color: #fff;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .input-container button:hover {
             background: #1F4A6B;
         }
 
-        .response-container {
-            margin-top: 2rem;
-            padding: 2rem;
-            background: var(--light-bg);
-            border-radius: 0.8rem;
-            border-left: 4px solid var(--primary-color);
-            animation: fadeIn 0.5s ease;
-        }
-
-        .error {
-            color: #dc3545;
-            background: #ffeef0;
-            padding: 1rem;
-            border-radius: 0.8rem;
-            border-left: 4px solid #dc3545;
-            margin: 1rem 0;
-        }
-
-        .partner-logos {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-            gap: 2rem;
-            padding: 2rem;
-            justify-items: center;
-            margin-top: 2rem;
-        }
-
-        .partner-logos img {
-            height: 50px;
-            opacity: 0.7;
-            transition: opacity 0.3s ease;
-        }
-
-        .partner-logos img:hover {
-            opacity: 1;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .vaccine-icon {
-            width: 40px;
-            height: 40px;
-        }
-
-        footer {
+        /* New Chat Button */
+        .new-chat-container {
             text-align: center;
-            padding: 2rem;
-            color: var(--primary-color);
-            background: white;
-            margin-top: auto;
+            margin-top: 1rem;
         }
 
-        @media (max-width: 768px) {
-            .container {
-                margin: 1rem;
-                transform: none;
-            }
-            
-            .header h1 {
-                font-size: 1.8rem;
-            }
+        .new-chat-button {
+            padding: 0.8rem 1.2rem;
+            font-size: 1rem;
+            border: none;
+            background: #E74C3C;
+            color: #fff;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .new-chat-button:hover {
+            background: #C0392B;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 1rem;
+            background: #2A5C82;
+            color: white;
+            font-size: 0.9rem;
         }
     </style>
-    <!-- Optional: Include icon library -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
+
 <body>
-    <div class="header">
-        <h1>
-            <i class="fas fa-shield-virus vaccine-icon"></i>
-            Polio Eradication Program
-        </h1>
-    </div>
-
-    <div class="container">
-        <form action="/ask" method="POST">
-            <div class="input-group">
-                <input type="text" id="query" name="query" required 
-                    placeholder="Ask about polio vaccines, symptoms, prevention, or eradication efforts...">
-            </div>
-            <button type="submit">
-                <i class="fas fa-search"></i>
-                Get Answer
-            </button>
+    <div class="navbar">Polio ChatBot</div>
+    
+    <div class="new-chat-container">
+        <form action="/new_chat" method="POST">
+            <button class="new-chat-button" type="submit">New Chat</button>
         </form>
-
-        {% if error %}
-        <div class="error">
-            <p>{{ error }}</p>
+    </div>
+    <div class="chat-container" id="chat">
+        {% if conversation %}
+        {% for msg in conversation %}
+        <div class="message {% if msg.role == 'user' %}user-message{% else %}assistant-message{% endif %}">
+            <p>{{ msg.content|safe }}</p>
         </div>
-        {% endif %}
-
-        {% if response %}
-        <div class="response-container">
-            <h3 style="color: var(--primary-color); margin-top: 0;">
-                <i class="fas fa-comment-medical"></i>
-                Expert Response
-            </h3>
-            <div class="response-content">
-                {{ response | safe }}
-            </div>
-        </div>
+        {% endfor %}
+        {% else %}
+        <p>Welcome! Ask me anything about polio, vaccines, or public health initiatives.</p>
         {% endif %}
     </div>
 
-    <footer>
-        <p>© 2024 Global Polio Eradication Initiative. Supported by health partners worldwide.</p>
-    </footer>
+    <!-- New Chat Button -->
+
+    <form action="/ask" method="POST" class="input-container">
+        <input type="text" name="query" placeholder="Type your message here..." required />
+        <button type="submit">Send</button>
+    </form>
+
+    <div class="footer">© 2024 Polio ChatBot - All Rights Reserved</div>
 </body>
+
 </html>
