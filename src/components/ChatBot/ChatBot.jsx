@@ -9,6 +9,8 @@ const ChatBot = () => {
     const [message, setMessage] = useState('');
     const [messages, setMessages] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
+    const [audioBlob, setAudioBlob] = useState(null);
+
     const messagesEndRef = useRef(null);
 
     const scrollToBottom = () => {
@@ -19,47 +21,72 @@ const ChatBot = () => {
         scrollToBottom();
     }, [messages]);
 
+    // Update handleSubmit function to send conversation history
     const handleSubmit = async (e) => {
         e.preventDefault();
-        if (!message.trim() || isLoading) return;
+        if ((!message.trim() && !audioBlob) || isLoading) return;
 
-        // Add user message
-        const newMessage = {
-            text: message,
+        // Create temporary message objects
+        const tempUserMessage = {
+            text: audioBlob ? 'Voice message' : message,
             isBot: false,
+            isAudio: !!audioBlob,
+            audio: audioBlob,
             timestamp: new Date().toLocaleTimeString(),
         };
 
-        setMessages(prev => [...prev, newMessage]);
-        setMessage('');
+        // Create temporary array with new message
+        const tempMessages = [...messages, tempUserMessage];
+
+        const payload = {
+            question: audioBlob ? 'Voice message' : message,
+            history: tempMessages
+                .filter(msg => !msg.isBot) // Only include user messages
+                .slice(-4) // Last 2 questions (assuming 2 messages per exchange)
+                .map(msg => msg.text)
+        };
+
+        // For voice messages, add the audio blob
+        const formData = new FormData();
+        let endpoint = 'https://polio-chatbot-backend.onrender.com/chatbot/api';
+        let config = {};
+
+        if (audioBlob) {
+            formData.append('audio', audioBlob, 'recording.mp3');
+            formData.append('history', JSON.stringify(payload.history));
+            endpoint = 'https://polio-chatbot-backend.onrender.com/chatbot/voice/api';
+            config = { headers: { 'Content-Type': 'multipart/form-data' } };
+        } else {
+            config = {
+                headers: { 'Content-Type': 'application/json' },
+                data: payload
+            };
+        }
+
         setIsLoading(true);
 
         try {
-            // API Call to your backend
-            const response = await axios.post('http://127.0.0.1:5000/chatbot/api', {
-                question: message,
-                // Add any additional parameters needed by your backend
-            });
+            const response = await axios.post(endpoint, audioBlob ? formData : payload, config);
 
-            
-            // Add bot response
             const botMessage = {
-                text: response.data.response
-                ,
+                text: response.data.response,
                 isBot: true,
                 timestamp: new Date().toLocaleTimeString(),
             };
 
-            setMessages(prev => [...prev, botMessage]);
+            setMessages(prev => [...prev, tempUserMessage, botMessage]);
+
         } catch (error) {
-            const errorMessage = {
-                text: 'Sorry, I encountered an error. Please try again.',
+            setMessages(prev => [...prev, tempUserMessage, {
+                text: 'Error sending message. Please try again.',
                 isBot: true,
                 timestamp: new Date().toLocaleTimeString(),
-            };
-            setMessages(prev => [...prev, errorMessage]);
+            }]);
+        } finally {
+            setMessage('');
+            setAudioBlob(null);
+            setIsLoading(false);
         }
-        setIsLoading(false);
     };
 
     return (
@@ -89,8 +116,8 @@ const ChatBot = () => {
                             >
                                 <div
                                     className={`max-w-[80%] rounded-lg p-3 ${msg.isBot
-                                            ? 'bg-gray-100 text-gray-800'
-                                            : 'bg-[#53AD49] text-white'
+                                        ? 'bg-gray-100 text-gray-800'
+                                        : 'bg-[#53AD49] text-white'
                                         }`}
                                 >
                                     <p className="text-sm">{msg.text}</p>
