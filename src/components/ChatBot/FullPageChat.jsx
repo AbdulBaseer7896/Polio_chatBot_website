@@ -107,13 +107,13 @@ const FullPageChat = () => {
 
         // For voice messages, add the audio blob
         const formData = new FormData();
-        let endpoint = 'https://polio-chatbot-backend.onrender.com/chatbot/api';
+        let endpoint = 'http://127.0.0.1:5000/chatbot/api';
         let config = {};
 
         if (audioBlob) {
             formData.append('audio', audioBlob, 'recording.mp3');
             formData.append('history', JSON.stringify(payload.history));
-            endpoint = 'https://polio-chatbot-backend.onrender.com/chatbot/voice/api';
+            endpoint = 'http://127.0.0.1:5000/chatbot/voice/api';
             config = { headers: { 'Content-Type': 'multipart/form-data' } };
         } else {
             config = {

@@ -2,9 +2,9 @@ import React from 'react'
 
 const AfterImage = () => {
     return (
-        <div className='px-[15%] my-16'>
+        <div className='px-6 md:px-[15%] my-16'>
             <div className=''>
-                <h1 className='text-5xl text-center pb-8 font-bold text-[#53AD49]'>Polio Free Pakistan for Every Child</h1>
+                <h1 className='text-2xl md:text-5xl text-center pb-8 font-bold text-[#53AD49]'>Polio Free Pakistan for Every Child</h1>
                 <p className='text-white text-justify'>Since 1994, the Pakistan Polio Eradication Programme has been fighting to end the crippling poliovirus from the country. The initiative is driven by up to <span className='text-[#53AD49] font-bold'>400,000</span>  trained and dedicated polio workers, the largest <span className='text-[#53AD49] font-bold'> surveillance</span> surveillance network in the world, quality data collection and analysis, behavioral change communication, state of the art laboratories, and some of the best epidemiologists and public health experts in Pakistan and the world.</p>
 
                 <div className='text-center text-[#53AD49]'>
@@ -12,7 +12,7 @@ const AfterImage = () => {
                 </div>
             </div>
 
-            <div className='grid grid-rows-1 grid-cols-3 gap-5 mt-16'>
+            <div className='grid md:grid-rows-1 md:grid-cols-3 gap-5 mt-16'>
                 <div className='bg-white rounded-3xl shadow-2xl border-4 border-[#53AD49]'>
                     <img className='rounded-t-2xl' src="/img/HomePage_Div_1.webp" alt="" />
                     <div className='px-6 py-6 text-center'>
